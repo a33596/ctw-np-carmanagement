@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        #carDetails {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #carDetails p {
+            font-size: 16px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        #carDetails p strong {
+            color: #000;
+        }
+
+        #carDetails img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Car Details</h1>
+    <div id="carDetails"></div>
+
+    <script>
+        const cars = [
+            { id: 1, brand: 'Toyota', model: 'Corolla', seats: 5, licensePlate: 'ABC123', engineType: 'combustion', autonomy: '600 km', color: 'Red', image: 'toyota-corolla.jpg' },
+            { id: 2, brand: 'Tesla', model: 'Model S', seats: 5, licensePlate: 'XYZ789', engineType: 'electric', autonomy: '500 km', color: 'Black', image: 'tesla-model-s.jpg' },
+            // Add more cars here
+        ];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const carId = parseInt(urlParams.get('id'));
+        const car = cars.find(c => c.id === carId);
+
+        if (car) {
+            const carDetails = document.getElementById('carDetails');
+            carDetails.innerHTML = `
+                <p><strong>Brand:</strong> ${car.brand}</p>
+                <p><strong>Model:</strong> ${car.model}</p>
+                <p><strong>Seats:</strong> ${car.seats}</p>
+                <p><strong>License Plate:</strong> ${car.licensePlate}</p>
+                <p><strong>Engine Type:</strong> ${car.engineType}</p>
+                <p><strong>Autonomy:</strong> ${car.autonomy}</p>
+                <p><strong>Color:</strong> ${car.color}</p>
+                <img src="${car.image}" alt="${car.brand} ${car.model}">
+            `;
+        } else {
+            document.getElementById('carDetails').innerText = 'Car not found.';
+        }
+    </script>
+</body>
+</html>

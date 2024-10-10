@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Management Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #333;
+        }
+
+        input[type="datetime-local"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .car-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .car-item {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .car-item button {
+            margin-left: 10px;
+        }
+
+        .view-button, .edit-button, .remove-button, .reserve-button {
+            background-color: #28a745;
+        }
+
+        .edit-button {
+            background-color: #ffc107;
+        }
+
+        .remove-button {
+            background-color: #dc3545;
+        }
+
+        .reserve-button {
+            background-color: #17a2b8;
+        }
+
+        button:disabled, .inactive button {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .form-container {
+            display: none;
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .inactive {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Car Management Tool</h1>
+    <label for="pickupDate">Pick Up Date/Time:</label>
+    <input type="datetime-local" id="pickupDate" name="pickupDate" required><br>
+    <label for="dropoffDate">Drop Off Date/Time:</label>
+    <input type="datetime-local" id="dropoffDate" name="dropoffDate" required><br>
+    <button id="searchButton">Search</button>
+    <ul class="car-list" id="carList"></ul>
+
+    <div class="form-container" id="reservationFormContainer">
+        <h2>Reserve Car</h2>
+        <form id="reservationForm">
+            <input type="hidden" id="carId">
+            <label for="driverName">Name:</label>
+            <input type="text" id="driverName" name="driverName" required><br>
+            <label for="contact">Contact:</label>
+            <input type="text" id="contact" name="contact" required><br>
+            <label for="licenseNumber">License Number:</label>
+            <input type="text" id="licenseNumber" name="licenseNumber" required><br>
+            <button type="submit">Confirm Reservation</button>
+        </form>
+    </div>
+
+    <script>
+        const cars = [
+            { id: 1, brand: 'Toyota', model: 'Corolla', seats: 5, licensePlate: 'ABC123', engineType: 'combustion', autonomy: '600 km', color: 'Red', image: 'toyota-corolla.jpg', available: true },
+            { id: 2, brand: 'Tesla', model: 'Model S', seats: 5, licensePlate: 'XYZ789', engineType: 'electric', autonomy: '500 km', color: 'Black', image: 'tesla-model-s.jpg', available: true },
+            // Add more cars here
+        ];
+
+        const carList = document.getElementById('carList');
+        const searchButton = document.getElementById('searchButton');
+        const reservationFormContainer = document.getElementById('reservationFormContainer');
+        const reservationForm = document.getElementById('reservationForm');
+        let selectedCarId = null;
+
+        searchButton.addEventListener('click', () => {
+            const pickupDate = new Date(document.getElementById('pickupDate').value);
+            const dropoffDate = new Date(document.getElementById('dropoffDate').value);
+            const currentDate = new Date();
+
+            if (pickupDate < currentDate) {
+                alert('Pick up date/time must be in the future.');
+                return;
+            }
+
+            renderCars(pickupDate, dropoffDate);
+        });
+
+        reservationForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const driverInfo = {
+                name: reservationForm.driverName.value,
+                contact: reservationForm.contact.value,
+                licenseNumber: reservationForm.licenseNumber.value
+            };
+
+            // Simulate an API call to reserve the car
+            const success = Math.random() > 0.2; // 80% chance of success
+            if (success) {
+                alert('Reservation concluded successfully!');
+                reservationFormContainer.classList.remove('active');
+            } else {
+                alert('Error concluding reservation. Please try again.');
+            }
+        });
+
+        function renderCars(pickupDate, dropoffDate) {
+            carList.innerHTML = '';
+            cars.forEach(car => {
+                const listItem = document.createElement('li');
+                listItem.className = `car-item ${car.available ? '' : 'inactive'}`;
+                listItem.innerHTML = `${car.brand} ${car.model} (${car.engineType}) 
+                    <button class="view-button" onclick="viewCar(${car.id})">View</button>
+                    <button class="edit-button" onclick="editCar(${car.id})">Edit</button>
+                    <button class="remove-button" onclick="removeCar(${car.id})">Remove</button>
+                    <button class="reserve-button" onclick="reserveCar(${car.id})" ${car.available ? '' : 'disabled'}>Reserve</button>`;
+                carList.appendChild(listItem);
+            });
+        }
+
+   
+
+        function viewCar(carId) {
+            const car = cars.find(car => car.id === carId);
+            if (car) {
+                const carDetails = encodeURIComponent(JSON.stringify(car));
+                window.location.href = `car-details.html?car=${carDetails}`;
+            }
+        }
+
+        function editCar(carId) {
+            const car = cars.find(car => car.id === carId);
+            if (car) {
+                // Populate form with car details for editing
+                // ...
+            }
+        }
+
+        function removeCar(carId) {
+            const success = Math.random() > 0.2; // 80% chance of success
+            if (success) {
+                alert('Car removed successfully!');
+                const carIndex = cars.findIndex(car => car.id === carId);
+                if (carIndex > -1) {
+                    cars.splice(carIndex, 1);
+                    renderCars();
+                }
+            } else {
+                alert('Error removing car. Please try again.');
+            }
+        }
+
+        function reserveCar(carId) {
+            selectedCarId = carId;
+            reservationFormContainer.classList.add('active');
+        }
+
+        renderCars();
+    </script>
+</body>
+</html>
+

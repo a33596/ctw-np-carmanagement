@@ -1,0 +1,96 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-top: 20px;
+}
+
+label {
+  display: block;
+  margin: 10px 0 5px;
+  color: #333;
+}
+
+input[type="datetime-local"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.car-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.car-item {
+  background-color: #fff;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.car-item button {
+  margin-left: 10px;
+}
+
+.view-button, .edit-button, .remove-button, .reserve-button {
+  background-color: #28a745;
+}
+
+.edit-button {
+  background-color: #ffc107;
+}
+
+.remove-button {
+  background-color: #dc3545;
+}
+
+.reserve-button {
+  background-color: #17a2b8;
+}
+
+button:disabled, .inactive button {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.form-container {
+  display: none;
+  margin-top: 20px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container.active {
+  display: block;
+}
+
+.inactive {
+  opacity: 0.5;
+  pointer-events: none;
+}
